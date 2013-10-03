@@ -1,6 +1,8 @@
 TODO
 
-JobFilter:
+* applyForJob (ATS, JREQ)
+
+* JobFilter:
 
 Classes:
 
@@ -8,8 +10,9 @@ Classes:
 	SearchByJob
 	SearchByDateAndJob
 
-
-
 JobApplicationList.byDate(date);
 JobApplicationList.byEmployer(employer);
 JobApplicationList.byDateAndEmployer(date, employer);
+
+
+
