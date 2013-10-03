@@ -1,0 +1,15 @@
+TODO
+
+JobFilter:
+
+Classes:
+
+	SearchByDate
+	SearchByJob
+	SearchByDateAndJob
+
+
+
+JobApplicationList.byDate(date);
+JobApplicationList.byEmployer(employer);
+JobApplicationList.byDateAndEmployer(date, employer);
