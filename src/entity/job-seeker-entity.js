@@ -7,7 +7,6 @@ var JobSeekerEntity = function(fields) {
 	this.appliedJobs = new JobApplicationList();
 };
 
-
 var Validator = {
 	"ATS": {
 		isJobApplicationValid: function(job, resume) {
@@ -50,7 +49,7 @@ var JobApplicationHandlerByStatus = {
 		// Log into the JobApplication Error (should that be the same JobApplicationManager? )
 		console.log("JREQ not PASSED for: " + job.get("title").get("value"));	
 	}
-}
+};
 
 var getJobApplicationHandler = function(reportType, seeker, job, resume, appliedJobs) {
 	var handler = function() {

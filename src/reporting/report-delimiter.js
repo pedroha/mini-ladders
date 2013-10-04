@@ -18,12 +18,12 @@ var TableDelimiterStrategy = {
       , postTable:  function() { return ''; }
     }
   , 'HTML': {
-        preCell:    function() { return '<td>'; }
+        preCell:    function() { return '\t<td>'; }
       , postBetweenCell:   function() { return ''; }
       , postCell:   function() { return '</td>'; }
-      , preRow:     function() { return '<tr>'; }
-      , postRow:    function() { return '</tr>'; }
-      , preTable:   function() { return '<table>'; }
-      , postTable:  function() { return '</table>'; }
+      , preRow:     function() { return '<tr>\n'; }
+      , postRow:    function() { return '</tr>\n'; }
+      , preTable:   function() { return '<table>\n'; }
+      , postTable:  function() { return '</table>\n'; }
     }
 };

@@ -134,7 +134,7 @@ if (1) {
         console.log("====>" + application.get("job").get("title").get("value") );
     });
 
-    var content = Reporter.createReport(appliedJobs, ReportTabularAdapter, REPORT_TYPE["CSV"]);
+    var content = Reporter.createReport(appliedJobs, ReportTabularAdapter, REPORT_TYPE["HTML"]);
     alert(content);
 }
 

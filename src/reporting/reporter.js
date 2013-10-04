@@ -5,7 +5,6 @@
     alert(content);
 */
 
-
 var ReportTabularAdapter = function(collection, rowAdapter) {
     this.getNumRows = function() {
         return collection.length;
