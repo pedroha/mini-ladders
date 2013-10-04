@@ -18,7 +18,7 @@ var JOB_TYPE = {
 
 var JobTitle = Model.extend({
 	default: {
-		title: null
+		value: null
 	},
 	initialize: function(fields) {
 		this.checkMissingFields("Job", fields, ["value"]);

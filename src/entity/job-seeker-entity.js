@@ -1,9 +1,8 @@
 var JobSeekerEntity = function(fields) {
 	var seeker = JobSeekerManager.create(fields);
 	seeker.entity = this;
-
 	this.seeker = seeker;
-
+	
 	this.savedJobs = new JobList();
 	this.appliedJobs = new JobApplicationList();
 };
@@ -52,25 +51,6 @@ var JobApplicationHandlerByStatus = {
 		console.log("JREQ not PASSED for: " + job.get("title").get("value"));	
 	}
 }
-
-/*
-var JobApplicationHandler = {
-	"ATS": {
-		handle: function(seeker, job, resume, appliedJobs) {
-  			var status = Validator["ATS"].isJobApplicationValid(job, resume);
-  			var handler = JobApplicationHandlerByStatus[status];
-  			handler(seeker, job, resume, appliedJobs);
-		}
-	}
-  , "JREQ": {
-  		handle: function(seeker, job, resume, appliedJobs) {
-  			var status = Validator["JREQ"].isJobApplicationValid(job, resume);
-  			var handler = JobApplicationHandlerByStatus[status];
-  			handler(seeker, job, resume, appliedJobs);
-  		}
- 	}
-};
-*/
 
 var getJobApplicationHandler = function(reportType, seeker, job, resume, appliedJobs) {
 	var handler = function() {

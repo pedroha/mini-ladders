@@ -80,6 +80,37 @@ if (0) {
 }
 
 
+if (0) {
+    // JobSeeker should be able to see jobs that they applied
+
+    var ibm = new EmployerEntity({name: "IBM"});
+
+    ibm.postJob({title: "Back-End Developer", type: JOB_TYPE.ATS});
+    ibm.postJob({title: "Front-End Developer", type: JOB_TYPE.ATS});
+
+    var list = ibm.listJobs();
+    list.each(function(item) {
+        console.log(">>>> " + item.get("title").get("value"));
+        console.log(">>>> " + item.get("type").get("value"));
+    });
+
+    var seeker = new JobSeekerEntity({firstName: "John", lastName: "Doe"});
+
+    var job = ibm.listJobs().first();
+    var application = seeker.applyForJob(job);
+
+    var job = ibm.listJobs().at(1);
+    var application = seeker.applyForJob(job);
+
+    var jobApplicationList = seeker.appliedJobs;
+
+    console.log("Applied jobs by Job Seeker");
+    jobApplicationList.each(function(application) {
+        console.log("====>" + application.get("job").get("title").get("value") );
+    });
+}
+
+
 if (1) {
     // Test basic reporting
 
@@ -88,25 +119,14 @@ if (1) {
     ibm.postJob({title: "Back-End Developer", type: JOB_TYPE.ATS});
     ibm.postJob({title: "Front-End Developer", type: JOB_TYPE.ATS});
 
-    var list = ibm.listJobs();
-
-    list.each(function(item) {
-        console.log(">>>> " + item.get("title").get("value"));
-        console.log(">>>> " + item.get("type").get("value"));
-    });
-
     var seeker = new JobSeekerEntity({firstName: "John", lastName: "Doe"});
-
-    console.log("About to apply 1");
 
     var job = ibm.listJobs().first();
     var application = seeker.applyForJob(job);
 
-    console.log("About to apply 2");
     var job = ibm.listJobs().at(1);
     var application = seeker.applyForJob(job);
 
-    console.log("About to list job applications");
     var appliedJobs = ibm.listJobApplications();
 
     console.log("Applied jobs");
@@ -114,5 +134,8 @@ if (1) {
         console.log("====>" + application.get("job").get("title").get("value") );
     });
 
-    //    var report = Reporting.create(appliedJobs, )
+    var content = Reporter.createReport(appliedJobs, ReportTabularAdapter, REPORT_TYPE.CSV);
+    alert(content);
+
 }
+
