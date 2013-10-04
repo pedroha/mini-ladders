@@ -1,5 +1,20 @@
 //--------------------------------------------------------------
 
+// var job = JobFactory.create({title: "Back-end Developer"});
+
+/*
+    var mgr = new JobManager();
+    var job = mgr.create({title: "Back-end Developer", type: JOB_TYPE.ATS});
+    //var job = mgr.create({title: "Back-end Developer"}); // This should fail!!
+
+    var name = job.get("title").get("value");
+    alert(name);
+
+    var type = job.get("type").get("value");
+    alert(type);
+
+*/
+
 
 if (0) {
     var microsoft = new Employer({name: "Microsoft"});
