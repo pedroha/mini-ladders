@@ -2,13 +2,19 @@
 // util
 //-----------
 
+function assert(condition, message) {
+    if (!condition) {
+        throw new Error(message || "Assertion failed");
+    }
+}
+
 // Remove Backbone Dependencies to the "util" layer
 
 var Collection = Backbone.Collection;
 
 var Model = Backbone.Model.extend({
 	checkMissingFields: function(className, fields, fieldList) {
-		console.log(JSON.stringify(fields));
+		// console.log(JSON.stringify(fields));
 
 		for (var i = 0; i < fieldList.length; i++) {
 			var field = fieldList[i];

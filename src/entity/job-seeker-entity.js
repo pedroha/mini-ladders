@@ -12,80 +12,82 @@ var JobSeekerEntity = function(fields) {
 var Validator = {
 	"ATS": {
 		isJobApplicationValid: function(job, resume) {
-			return true;
+			return "success";
 		}		
 	}
   , "JREQ": {
 		isJobApplicationValid: function(job, resume) {
+			var status = "failed";
 			var valid = (!!resume);
-			return valid;
-		}		
-	}
-};
-
-
-var JobApplicationHandler = {
-	"ATS": {
-		handle: function(application, appliedJobs) {
-			appliedJobs.add(application);
+			if (valid) {
+				status = "success";
+			}
+			return status;
 		}
 	}
-  , "JREQ": {
-  		handle: function(application, appliedJobs) {
-  			if (!application.get("resume")) {
-  				// Log onto some place!
-  			}
-  			else {
-				appliedJobs.add(application);
-			}
-  		}
- 	}
 };
 
-// Deferred will work so well here: Deferred.then(success, fail); ? Is this cheating ??
+var createJobApplication = function(seeker, job, resume) {
+	// TODO: investigate // BUG in Backbone? NOT WORKING?
+	// var date = new JobApplicationDate(2013, 10, 5); 
+	var date = createDate(2013, 10, 5);
 
-JobSeekerEntity.prototype.applyForJob = function(job, resume) {
 	var jobApplication = JobApplicationManager.create({
-	    jobSeekerId:     this.seeker.get("cid")
-	  , applicationDate: new JobApplicationDate()
+	    jobSeekerId:     seeker.get("cid")		// creating circular reference if not using Id
+	  , applicationDate: date
 	  , job: job
 	  , resume: resume
 	});
-	var jobType = job.get("type").get("value");
-	var handler = JobApplicationHandler[jobType];
-	var deferred = handler.handle(jobApplication, this.appliedJobs);
-	return deferred;
+	return jobApplication;	
 };
 
+var JobApplicationHandlerByStatus = {
+	"success": function(seeker, job, resume, appliedJobs) {
+		var application = createJobApplication(seeker, job, resume);
+		appliedJobs.add(application);
+	}
+  , "failed": function(seeker, job, resume, appliedJobs) {
+		// Log onto some place!
+		// Log into the JobApplication Error (should that be the same JobApplicationManager? )
+		console.log("JREQ not PASSED for: " + job.get("title").get("value"));	
+	}
+}
+
 /*
-	var jobType = job.get("type").get("value");
-	// alert(jobType);
-
-	var validator = Validator[jobType];
-
-	if (validator) {
-		var valid = validator.isJobApplicationValid(job, resume);
-
-		if (valid) {
-			var fields = {
-				job: job
-			  , applicationDate: new JobApplicationDate()
-			  , resume: resume
-			};
-			var application = JobApplicationManager.create(fields); // Rules: IF ATS do something
-			var appliedJobs = this.appliedJobs;
-			appliedJobs.add(application);
-
-			return application;		
-		}
-		else { // TODO: no ELSE  !!!!!
-			// TODO:
-			// Log into the JobApplication Error (should that be the same JobApplicationManager? )
+var JobApplicationHandler = {
+	"ATS": {
+		handle: function(seeker, job, resume, appliedJobs) {
+  			var status = Validator["ATS"].isJobApplicationValid(job, resume);
+  			var handler = JobApplicationHandlerByStatus[status];
+  			handler(seeker, job, resume, appliedJobs);
 		}
 	}
-	// NO ELSE !!!
-	else {
+  , "JREQ": {
+  		handle: function(seeker, job, resume, appliedJobs) {
+  			var status = Validator["JREQ"].isJobApplicationValid(job, resume);
+  			var handler = JobApplicationHandlerByStatus[status];
+  			handler(seeker, job, resume, appliedJobs);
+  		}
+ 	}
+};
+*/
+
+var getJobApplicationHandler = function(reportType, seeker, job, resume, appliedJobs) {
+	var handler = function() {
+		var status = Validator[reportType].isJobApplicationValid(job, resume);
+		var handlerByStatus = JobApplicationHandlerByStatus[status];
+		handlerByStatus(seeker, job, resume, appliedJobs);
+	};
+	return handler;
+};
+
+JobSeekerEntity.prototype.applyForJob = function(job, resume) {
+//	var jobApplication = createJobApplication(job, resume);
+	var jobType = job.get("type").get("value");
+	if (!(jobType in {"ATS": 0, "JREQ": 0})) {
 		var msg = "JobSeekerEntity.applyForJob(): validator for JOB_TYPE('" + jobType + "'), not found.";
 		throw new Error(msg);
 	}
-*/
+	var handler = getJobApplicationHandler(jobType, this.seeker, job, resume, this.appliedJobs);;
+	handler(this.seeker, job, resume, this.appliedJobs);
+};
