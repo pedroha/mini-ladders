@@ -5,10 +5,6 @@
     alert(content);
 */
 
-function createAdapter(constructor) {
-    var factoryFunction = constructor.bind.apply(constructor, arguments);
-    return new factoryFunction();
-}
 
 var ReportTabularAdapter = function(collection, rowAdapter) {
     this.getNumRows = function() {
@@ -25,32 +21,51 @@ var ReportTabularAdapter = function(collection, rowAdapter) {
 };
 
 var JobApplicationRowAdapter = function() {
-    this.getColumn = function(item, column) {
-        if (column == 0) {
+    var dataFn = {
+        "null": function(item) {
+            return "null";
         }
-        var content = item.get('job').get('title').get('value');
+      , "0": function(item) {
+            var title = item.get('job').get('title');
+            var display = title.get('value');
+            return display;
+        }
+      , "1": function(item) {
+            var date = item.get('date');
+            var display = date.format("YYYY-MM-DD");
+            return display;
+        }
+      , "2": function(item) {
+            return item.get('job').get('title').get('value'); 
+        }
+      , "3": function(item) {
+            return item.get('job').get('title').get('value'); 
+        }
+    };
+    
+    this.getColumn = function(item, column) {
+        var col = "" + column; // stringify the column
+        var content = dataFn[col](item);
         return content;
     };
 };
 
 var Reporter = (function() {
-    var getFormatter = function(reportType) {
-        return Formatter[reportType.type];
+    var createAdapter = function(constructor) {
+        var factoryFunction = constructor.bind.apply(constructor, arguments);
+        return new factoryFunction();
     };
 
-    var createReport = function(collection, adapterClass, format) {
+    var createReport = function(collection, adapterClass, reportType) {
         var rowAdapter = new JobApplicationRowAdapter();
-        var delimiter = TableDelimiterStrategy["CSV"];
+        var delimiter = TableDelimiterStrategy[reportType.value];
         var adapter = createAdapter(adapterClass, collection, rowAdapter);
-        var formatter = getFormatter(format);
-        var content = formatter.format(adapter, delimiter);
+        var content = TableReportBuilder.build(adapter, delimiter);
         return content;
     };
 
     return {
-        createReport: function(collection, adapterClass, format) {
-            return createReport(collection, adapterClass, format);
-        }
+        createReport: createReport
     };
 })();
 

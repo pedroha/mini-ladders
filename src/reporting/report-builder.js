@@ -1,34 +1,3 @@
-var ReportType = function(type) {
-    this.type = type;
-};
-
-var REPORT_TYPE = {
-    'CSV': new ReportType('CSV')
-  , 'HTML': new ReportType('HTML')
-};
-
-
-var TableDelimiterStrategy = {
-    'CSV': {
-        preCell:    function() { return '\"'; }
-      , postCell:   function() { return '\"'; }
-      , postBetweenCell:   function() { return ','; }
-      , preRow:     function() { return ''; }
-      , postRow:    function() { return '\n'; }
-      , preTable:   function() { return ''; }
-      , postTable:  function() { return ''; }
-    }
-  , 'HTML': {
-        preCell:    function() { return '<td>'; }
-      , postBetweenCell:   function() { return ''; }
-      , postCell:   function() { return '</td>'; }
-      , preRow:     function() { return '<tr>'; }
-      , postRow:    function() { return '</tr>'; }
-      , preTable:   function() { return '<table>'; }
-      , postTable:  function() { return '</table>'; }
-    }
-};
-
 var TableReportBuilder = (function() {
 
     var buildCell = function(row, col, data, delimiter) {
@@ -44,8 +13,7 @@ var TableReportBuilder = (function() {
         for (var j = 0; j < cols; j++) {
             rowContent += buildCell(row, j, data, delimiter);
         }
-        var delimitedRow = delimiter.preRow() + rowContent + delimiter.postRow();
-        return delimitedRow;
+        return delimiter.preRow() + rowContent + delimiter.postRow();
     };
 
     var buildRows = function(rows, cols, data, delimiter) {
@@ -54,15 +22,14 @@ var TableReportBuilder = (function() {
             var rowContent = buildRow(i, cols, data, delimiter);
             content += rowContent;
         }
-        var delimitedContent = delimiter.preTable() + content + delimiter.postTable();
-        return delimitedContent;
-    }
+        return delimiter.preTable() + content + delimiter.postTable();
+    };
 
     var buildReport = function(data, delimiter) {
         var rows = data.getNumRows();
         var cols = data.getNumCols();
         var content = buildRows(rows, cols, data, delimiter);
-        return 'CSV: ' + content;
+        return content;
     };
 
     return {

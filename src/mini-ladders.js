@@ -112,7 +112,7 @@ if (0) {
 
 
 if (1) {
-    // Test basic reporting
+    // Test basic reporting: CSV, HTML (look fine)
 
     var ibm = new EmployerEntity({name: "IBM"});
 
@@ -134,8 +134,13 @@ if (1) {
         console.log("====>" + application.get("job").get("title").get("value") );
     });
 
-    var content = Reporter.createReport(appliedJobs, ReportTabularAdapter, REPORT_TYPE.CSV);
+    var content = Reporter.createReport(appliedJobs, ReportTabularAdapter, REPORT_TYPE["CSV"]);
     alert(content);
-
 }
+
+// TODO:
+// 1) Add fields to each of the models (for better reporting)
+// 2) Add filtering, grouping, sorting functionality
+// 3) Review all the guidelines (any broken?)
+
 
