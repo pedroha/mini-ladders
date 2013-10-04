@@ -4,7 +4,7 @@
 //
 //--------------------------------------------------------------
 
-var Resume = MyModel.extend({
+var Resume = Model.extend({
 	default: {
 		title: null
 	  , content: null
@@ -23,7 +23,7 @@ var Resume = MyModel.extend({
 	}
 });
 
-var ResumeList = Backbone.Collection.extend({
+var ResumeList = Collection.extend({
 	model: Resume
 });
 

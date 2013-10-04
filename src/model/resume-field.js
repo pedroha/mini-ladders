@@ -1,4 +1,4 @@
-var ResumeTitle = MyModel.extend({
+var ResumeTitle = Model.extend({
 	default: {
 		value: null
 	},
@@ -8,7 +8,7 @@ var ResumeTitle = MyModel.extend({
 	}
 });
 
-var ResumeContent = MyModel.extend({
+var ResumeContent = Model.extend({
 	default: {
 		value: null
 	},

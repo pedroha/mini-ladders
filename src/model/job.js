@@ -4,7 +4,7 @@
 //
 //--------------------------------------------------------------
 
-var Job = MyModel.extend({
+var Job = Model.extend({
 	default: {
 		type: null
 	  , title: null
@@ -17,7 +17,7 @@ var Job = MyModel.extend({
 	}
 });
 
-var JobList = Backbone.Collection.extend({
+var JobList = Collection.extend({
 	model: Job
 });
 

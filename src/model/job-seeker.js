@@ -4,7 +4,7 @@
 //
 //--------------------------------------------------------------
 
-var JobSeeker = MyModel.extend({
+var JobSeeker = Model.extend({
 	initialize: function(fields) {
 		var fieldList = ["firstName", "lastName"];
 		this.checkMissingFields("JobSeeker", fields, fieldList);
@@ -14,7 +14,7 @@ var JobSeeker = MyModel.extend({
 	}
 });
 
-var JobSeekerList = Backbone.Collection.extend({
+var JobSeekerList = Collection.extend({
 	model: JobSeeker
 });
 

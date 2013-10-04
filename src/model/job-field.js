@@ -1,4 +1,4 @@
-var JobType = MyModel.extend({
+var JobType = Model.extend({
 	default: {
 		value: null
 	},
@@ -13,10 +13,10 @@ var JobType = MyModel.extend({
 
 var JOB_TYPE = {
   ATS:  new JobType({value: "ATS"})
-, JREQ: new JobType({value: "JReq"})
+, JREQ: new JobType({value: "JREQ"})
 };
 
-var JobTitle = MyModel.extend({
+var JobTitle = Model.extend({
 	default: {
 		title: null
 	},

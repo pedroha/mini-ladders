@@ -1,4 +1,4 @@
-var JobApplicationList = Backbone.Collection.extend({
+var JobApplicationList = Collection.extend({
     model: JobApplication
 
   , byDate: function(applicationDate) {

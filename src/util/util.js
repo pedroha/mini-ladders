@@ -2,7 +2,11 @@
 // util
 //-----------
 
-var MyModel = Backbone.Model.extend({
+// Remove Backbone Dependencies to the "util" layer
+
+var Collection = Backbone.Collection;
+
+var Model = Backbone.Model.extend({
 	checkMissingFields: function(className, fields, fieldList) {
 		console.log(JSON.stringify(fields));
 
@@ -17,8 +21,7 @@ var MyModel = Backbone.Model.extend({
 
 //-------
 
-
-var CompanyName = MyModel.extend({
+var CompanyName = Model.extend({
 	defaults: {
 		value: null
 	}

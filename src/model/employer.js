@@ -4,7 +4,7 @@
 //
 //--------------------------------------------------------------
 
-var Employer = MyModel.extend({
+var Employer = Model.extend({
 	default: {
 		name: null
 	},
@@ -15,7 +15,7 @@ var Employer = MyModel.extend({
 	}
 });
 
-var EmployerList = Backbone.Collection.extend({
+var EmployerList = Collection.extend({
 	model: Employer
 });
 

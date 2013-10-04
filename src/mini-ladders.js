@@ -47,6 +47,7 @@ if (0) {
 
 
 if (1) {
+    // Test: Employer can list all Job Applications
 
     var ibm = new EmployerEntity({name: "IBM"});
 
@@ -63,7 +64,9 @@ if (1) {
     var seeker = new JobSeekerEntity({firstName: "John", lastName: "Doe"});
 
     var job = ibm.listJobs().first();
+    var application = seeker.applyForJob(job);
 
+    var job = ibm.listJobs().at(1);
     var application = seeker.applyForJob(job);
 
     var appliedJobs = ibm.listJobApplications();

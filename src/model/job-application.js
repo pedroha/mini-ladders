@@ -4,11 +4,11 @@
 //
 //--------------------------------------------------------------
 
-var JobApplicationDate = MyModel.extend({
+var JobApplicationDate = Model.extend({
 });
 
 
-var JobApplication = MyModel.extend({
+var JobApplication = Model.extend({
 	default: {
 		date: null
 	  , job: null
@@ -29,3 +29,15 @@ var JobApplicationFactory = {
 	}
 };
 
+// ------------------------------------------------------------
+
+/*
+var JobApplication = Model.extend({
+	default: {
+		requester: null
+	  , request: null
+	}
+});
+*/
+
+// ------------------------------------------------------------
