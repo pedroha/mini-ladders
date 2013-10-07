@@ -159,7 +159,7 @@ if (0) {
 // 3) Review all the guidelines (any broken? probably few here and there)
 
 
-if (1) {
+if (0) {
     // Report must have:
     // * Date, Employer, Title, JobSeeker name
     // Right now, we have "Title" and "Date", we need: Employer and JobSeeker names
@@ -181,10 +181,81 @@ if (1) {
 
     console.log("Applied jobs");
     appliedJobs.each(function(application) {
-        console.log("====>" + application.get("job").getTitle() );
+        var job = application.get("job");
+        console.log("====>" + job.getTitle().get("value") );
     });
 
     var content = Reporter.createReport(appliedJobs, ReportTabularAdapter, REPORT_TYPE["CSV"]);
     alert(content);
 }
+
+if (0) {
+    // JobSeeker: list applied jobs
+
+    var ibm = new EmployerEntity({name: "IBM"});
+
+    ibm.postJob({title: "Back-End Developer", type: JOB_TYPE.ATS});
+    ibm.postJob({title: "Front-End Developer", type: JOB_TYPE.ATS});
+
+    var seeker = new JobSeekerEntity({firstName: "John", lastName: "Doe"});
+
+    var job = ibm.listJobs().first();
+    var application = seeker.applyForJob(job);
+
+    var job = ibm.listJobs().at(1);
+    var application = seeker.applyForJob(job);
+
+    var appliedJobs = seeker.listAppliedJobApplications();
+
+    console.log("Applied jobs");
+    appliedJobs.each(function(application) {
+        var job = application.get("job");
+        console.log("====>" + job.getTitle().get("value") );
+    });
+
+    var content = Reporter.createReport(appliedJobs, ReportTabularAdapter, REPORT_TYPE["CSV"]);
+    alert(content);
+
+}
+
+
+if (1) {
+    // Employer: list applied jobs for specific day --> Date equals + DateModel
+
+    var ibm = new EmployerEntity({name: "IBM"});
+
+    ibm.postJob({title: "Back-End Developer", type: JOB_TYPE.ATS});
+    ibm.postJob({title: "Front-End Developer", type: JOB_TYPE.JREQ});
+
+    var seeker = new JobSeekerEntity({firstName: "John", lastName: "Doe"});
+
+    var date = new DateModel(2013, 10, 21);
+
+    var job = ibm.listJobs().first();
+    var application = seeker.applyForJob(date, job);
+
+    var job = ibm.listJobs().at(1);
+    var application = seeker.applyForJob(date, job);
+
+    var appliedJobs = seeker.listAppliedJobApplications();
+
+    // Let's play with filters!
+
+    console.log("Applied jobs");
+    appliedJobs.each(function(application) {
+        var job = application.get("job");
+        console.log("====>" + job.getTitle().get("value") );
+    });
+
+    var content = Reporter.createReport(appliedJobs, ReportTabularAdapter, REPORT_TYPE["CSV"]);
+    alert(content);
+
+}
+
+// Employer: list applied jobs for specific job --> Job equals
+// Employer: list applied jobs for specific job and day -> Double filtering!
+
+// Ladders: List of what Jobs did job seekers applied for a given day.
+// Ladders: List of failed job applications for a given day.
+
 

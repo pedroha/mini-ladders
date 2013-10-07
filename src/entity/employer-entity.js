@@ -4,7 +4,6 @@ var EmployerEntity = function(fields) {
 	employer.entity = this;
 	this.employer = employer;
 
-	this.postedJobs = new JobList();
 };
 
 EmployerEntity.prototype.postJob = function(fields) {
@@ -13,14 +12,22 @@ EmployerEntity.prototype.postJob = function(fields) {
 	fields["employer"] = employer; // Add the employer field
 
 	var job = JobManager.create(fields);
-	var postedJobs = this.postedJobs;
-	postedJobs.add(job);
+
+	var postedJobs = employer.get("postedJobs");
+	var jobs = postedJobs.get("jobs");
+
+	jobs.add(job); // Should we instead do: postedJobs.add(job)?
+
 	return job;
 };
 
-EmployerEntity.prototype.listJobs = function() {
-	return this.postedJobs;
+EmployerEntity.prototype.listJobs = function() { // Should we return jobs or PostedJobs?
+	var employer = this.employer;
+	var postedJobs = employer.get("postedJobs");
+	var jobs = postedJobs.get("jobs");
+	return jobs;
 };
+
 
 var JobFilter = function(fields) {
 	this.fields = fields;

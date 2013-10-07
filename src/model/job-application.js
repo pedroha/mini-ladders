@@ -15,25 +15,18 @@ var createDate = function(year, month, day) {
   	// return str;
 };
 
+var DateModel = function(year, month, day) {
+	this.date = createDate(year, month, day);
+};
 
-var DateModel = Model.extend({	// All internal dates using moment() API
-	default: {
-		value: null
-	}
-  , initialize: function(year, month, day) {
-  	/*
-  		console.log(">>>>>>>>>>>>")
-  		for (var i = 0; i < arguments.length; i++) {
-  			console.log( JSON.stringify(arguments[i] ));
-  		}
-  		console.log(">>>>>>>>>>>>")
+DateModel.prototype.toString = function() {
+	return this.format("YYYYMMDD");
+};
 
-	  	var date = createDate(year, month, day);
-
-	  	this.set("value", date);
-	  	*/
-	}
-});
+DateModel.prototype.format = function(fmt) {
+	var date = this.date;
+	return date.format(fmt);
+};
 
 var SeekingAction = Model.extend({
 	default: {

@@ -37,3 +37,22 @@ Done
 [x] Added extra fields to the Object Models for the reporting (no issues with circular dependencies in Backbone)
 [x] All classes have no more than two instance properties
 [x] Refactored so that there's a single dot per line (tabular-adapter.js)
+
+
+Need to change:
+
+JobList -> PostedJobs collection that contains a JobList?
+
+Experimenting with PostedJobs (instead of the generic JobList).
+
+May need to review all the collections!
+
+
+// We need the same Filtering algorithms for: Employer and for the Ladders!
+
+a) Focus on getting the Employer Filter first
+b) Then create the JobSystem (/the Ladders) and do more reporting
+
+
+1) Fix the DateModel <- JobApplicationDate for the JobApplication class
+2) Add filtering

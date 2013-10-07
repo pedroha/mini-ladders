@@ -25,14 +25,16 @@ var Validator = {
 	}
 };
 
-var createJobApplication = function(seeker, job, resume) {
+var createJobApplication = function(seeker, job, resume, applicationDate) {
 	// TODO: investigate // BUG in Backbone? NOT WORKING?
-	// var date = new JobApplicationDate(2013, 10, 5); 
-	var date = createDate(2013, 10, 5);
+
+	if (!applicationDate) {
+		throw new Error("createJobApplication(): Missing applicationDate");
+	}
 
 	var jobApplication = JobApplicationManager.create({
 	    jobSeeker: 		 seeker
-	  , applicationDate: date
+	  , applicationDate: applicationDate
 	  , job: job
 	  , resume: resume
 	});
@@ -40,33 +42,50 @@ var createJobApplication = function(seeker, job, resume) {
 };
 
 var JobApplicationHandlerByStatus = {
-	"success": function(seeker, job, resume, appliedJobs) {
-		var application = createJobApplication(seeker, job, resume);
+	"success": function(seeker, job, resume, applicationDate, appliedJobs) {
+		var application = createJobApplication(seeker, job, resume, applicationDate);
 		appliedJobs.add(application);
 	}
-  , "failed": function(seeker, job, resume, appliedJobs) {
+  , "failed": function(seeker, job, resume, applicationDate, appliedJobs) {
 		// Log onto some place!
 		// Log into the JobApplication Error (should that be the same JobApplicationManager? )
-		console.log("JREQ not PASSED for: " + job.get("title").get("value"));	
+		var title = job.getTitle();
+		console.log("JREQ not PASSED for: " + title.get("value"));	
 	}
 };
 
-var getJobApplicationHandler = function(reportType, seeker, job, resume, appliedJobs) {
+var getJobApplicationHandler = function(reportType, seeker, job, resume, applicationDate, appliedJobs) {
 	var handler = function() {
 		var status = Validator[reportType].isJobApplicationValid(job, resume);
 		var handlerByStatus = JobApplicationHandlerByStatus[status];
-		handlerByStatus(seeker, job, resume, appliedJobs);
+		handlerByStatus(seeker, job, resume, applicationDate, appliedJobs);
 	};
 	return handler;
 };
 
-JobSeekerEntity.prototype.applyForJob = function(job, resume) {
+JobSeekerEntity.prototype.applyForJob = function(applicationDate, job, resume) {
 //	var jobApplication = createJobApplication(job, resume);
 	var jobType = job.get("type").get("value");
+
 	if (!(jobType in {"ATS": 0, "JREQ": 0})) {
 		var msg = "JobSeekerEntity.applyForJob(): validator for JOB_TYPE('" + jobType + "'), not found.";
 		throw new Error(msg);
 	}
-	var handler = getJobApplicationHandler(jobType, this.seeker, job, resume, this.appliedJobs);;
+	var handler = getJobApplicationHandler(jobType, this.seeker, job, resume, applicationDate, this.appliedJobs);;
 	handler(this.seeker, job, resume, this.appliedJobs);
 };
+
+
+JobSeekerEntity.prototype.savedJob = function(job) {
+	var savedJobs = this.savedJobs;
+	savedJobs.add(job);
+};
+
+JobSeekerEntity.prototype.listSavedJobs = function() {
+	return this.savedJobs;
+};
+
+JobSeekerEntity.prototype.listAppliedJobApplications = function() {
+	return this.appliedJobs;
+};
+
