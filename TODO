@@ -14,5 +14,26 @@ JobApplicationList.byDate(date);
 JobApplicationList.byEmployer(employer);
 JobApplicationList.byDateAndEmployer(date, employer);
 
+---
+
+// 1) Add fields to each of the models (for better reporting)
+// 2) Add filtering, grouping, sorting functionality (under the "reporting" package)
+// 3) Review all the guidelines (any broken? probably few here and there)
 
 
+// Report must have:
+// * Date, Employer, Title, JobSeeker name
+// Right now, we have "Title" and "Date", we need: Employer and JobSeeker names
+
+Done!
+
+JobApplicationRowAdapter
+
+-> Looks messy (too many "getters")
+
+Can we overwrite "set" in Backbone.Model? I think so.
+
+Done
+[x] Added extra fields to the Object Models for the reporting (no issues with circular dependencies in Backbone)
+[x] All classes have no more than two instance properties
+[x] Refactored so that there's a single dot per line (tabular-adapter.js)

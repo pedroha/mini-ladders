@@ -8,6 +8,10 @@ var EmployerEntity = function(fields) {
 };
 
 EmployerEntity.prototype.postJob = function(fields) {
+	var employer = this.employer;
+
+	fields["employer"] = employer; // Add the employer field
+
 	var job = JobManager.create(fields);
 	var postedJobs = this.postedJobs;
 	postedJobs.add(job);

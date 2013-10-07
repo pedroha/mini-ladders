@@ -126,7 +126,7 @@ if (0) {
 }
 
 
-if (1) {
+if (0) {
     // Test basic reporting: CSV, HTML (look fine)
 
     var ibm = new EmployerEntity({name: "IBM"});
@@ -153,9 +153,38 @@ if (1) {
     alert(content);
 }
 
-// TODO:
+// TODO (more work on the Models to get the right fields)
 // 1) Add fields to each of the models (for better reporting)
-// 2) Add filtering, grouping, sorting functionality
-// 3) Review all the guidelines (any broken?)
+// 2) Add filtering, grouping, sorting functionality (under the "reporting" package)
+// 3) Review all the guidelines (any broken? probably few here and there)
 
+
+if (1) {
+    // Report must have:
+    // * Date, Employer, Title, JobSeeker name
+    // Right now, we have "Title" and "Date", we need: Employer and JobSeeker names
+
+    var ibm = new EmployerEntity({name: "IBM"});
+
+    ibm.postJob({title: "Back-End Developer", type: JOB_TYPE.ATS});
+    ibm.postJob({title: "Front-End Developer", type: JOB_TYPE.ATS});
+
+    var seeker = new JobSeekerEntity({firstName: "John", lastName: "Doe"});
+
+    var job = ibm.listJobs().first();
+    var application = seeker.applyForJob(job);
+
+    var job = ibm.listJobs().at(1);
+    var application = seeker.applyForJob(job);
+
+    var appliedJobs = ibm.listJobApplications();
+
+    console.log("Applied jobs");
+    appliedJobs.each(function(application) {
+        console.log("====>" + application.get("job").getTitle() );
+    });
+
+    var content = Reporter.createReport(appliedJobs, ReportTabularAdapter, REPORT_TYPE["CSV"]);
+    alert(content);
+}
 

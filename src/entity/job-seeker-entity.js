@@ -31,7 +31,7 @@ var createJobApplication = function(seeker, job, resume) {
 	var date = createDate(2013, 10, 5);
 
 	var jobApplication = JobApplicationManager.create({
-	    jobSeekerId:     seeker.get("cid")		// creating circular reference if not using Id
+	    jobSeeker: 		 seeker
 	  , applicationDate: date
 	  , job: job
 	  , resume: resume

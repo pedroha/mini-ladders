@@ -6,14 +6,20 @@
 
 var Job = Model.extend({
 	default: {
-		type: null
-	  , title: null
+		requirement: null
+	  , employer: null
 	},
 	initialize: function(fields) {
-		this.checkMissingFields("Job", fields, ["title", "type"]);
-		var title = new JobTitle({value: fields.title});
-		this.set("title", title);
-		this.set("type", fields["type"]);
+		this.checkMissingFields("Job", fields, ["title", "type", "employer"]);
+
+		var requirement = new JobRequirement(fields);
+		this.set("requirement", requirement);
+		this.set("employer", fields["employer"]);
+	}
+  , getTitle: function() {
+		var requirement = this.get("requirement");
+  		var title = requirement.get("title");
+  		return title;
 	}
 });
 

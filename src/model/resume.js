@@ -11,13 +11,11 @@ var Resume = Model.extend({
 	  , owner: null
 	},
 	initialize: function(fields) {
-		this.checkMissingFields("Resume", fields, ["title", "content", "owner"]);
+		this.checkMissingFields("Resume", fields, ["title", "owner"]);
 
-		var content = new ResumeContent(fields);
 		var title   = new ResumeTitle(fields);
 		var owner   = fields["owner"];
 
-		this.set("content", content);
 		this.set("title", title);
 		this.set("owner", owner);
 	}

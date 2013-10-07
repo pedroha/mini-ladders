@@ -12,33 +12,53 @@ var ReportTabularAdapter = function(collection, rowAdapter) {
     };
 };
 
+var JobApplicationValueAdapter = {
+    "applicationDate": function(item) {
+        var date = item.getApplicationDate();
+        var display = date.format("YYYY-MM-DD");
+        return display;
+    }
+  , "companyName": function(item) {
+        var employer = item.getEmployer();
+        var name = employer.get("name");
+        var display = name.get('value');
+        return display;
+    }
+  , "jobTitle": function(item) {
+        var job = item.getJob();
+        var title = job.getTitle();
+        var display = title.get("value");
+        return display;
+    }
+  , "seekerName": function(item) {
+        var seeker = item.get('jobSeeker');
+        var name = seeker.get("name");
+        var display = name.getFullName();
+        return display;
+    }
+};
+
 var JobApplicationRowAdapter = function() {
-    var dataFn = {
-        "null": function(item) {
-            return "null";
-        }
-      , "0": function(item) {
-            // Employer
-            return item.get('job').get('title').get('value'); 
-        }
-      , "1": function(item) {
-            // Date ------------------------
-            var date = item.get('date');
-            var display = date.format("YYYY-MM-DD");
-            return display;
-        }
-      , "2": function(item) {
-            // Job Title ------------------------
-            var title = item.get('job').get('title');
-            var display = title.get('value');
-            return display;
-        }
-      , "3": function(item) {
-            // JobSeeker
-            return item.get('job').get('title').get('value'); 
-        }
+    var indexMapping = {
+        "0": "companyName"
+      , "1": "applicationDate"
+      , "2": "jobTitle"
+      , "3": "seekerName"
     };
-    
+
+    var valueAdapterFn = function(field, item) {
+        var value = JobApplicationValueAdapter[field](item);
+        return value;
+    };
+
+    var dataFn = {};
+    for (var idx in indexMapping) {
+        if (indexMapping.hasOwnProperty(idx)) {
+            var value = indexMapping[idx];
+            dataFn[idx] = valueAdapterFn.bind(null, value);
+        }
+    }
+
     this.getColumn = function(item, column) {
         var col = "" + column; // stringify the column
         var content = dataFn[col](item);

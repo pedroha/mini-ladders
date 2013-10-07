@@ -25,3 +25,17 @@ var JobTitle = Model.extend({
 		this.set("value", fields["value"]);
 	}
 });
+
+var JobRequirement = Model.extend({
+	default: {
+		jobType: null
+	  , title: ''
+	},
+	initialize: function(fields) {
+		this.checkMissingFields("JobRequirement", fields, ["type", "title"]);
+
+		var title = new JobTitle({value: fields.title});
+		this.set("type", fields["type"]);
+		this.set("title", title);
+	}
+});
