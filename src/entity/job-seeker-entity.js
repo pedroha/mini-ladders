@@ -52,23 +52,22 @@ var JobApplicationHandlerByStatus = {
 	}
 };
 
-var applyForJob = function(reportType, seeker, job, resume, applicationDate, appliedJobs) {
+var requestJobApplication = function(reportType, seeker, job, resume, applicationDate, appliedJobs) {
 	var status = Validator[reportType].isJobApplicationValid(job, resume);
 	var handlerByStatus = JobApplicationHandlerByStatus[status];
 	return handlerByStatus(seeker, job, resume, applicationDate, appliedJobs);
 };
 
 JobSeekerEntity.prototype.applyForJob = function(applicationDate, job, resume) {
-	var jobType = job.get("type").get("value");
+	var jobType = job.get("type");
+	var jobTypeValue = jobType.get("value");
 
-	if (!(jobType in {"ATS": 0, "JREQ": 0})) {
-		var msg = "JobSeekerEntity.applyForJob(): validator for JOB_TYPE('" + jobType + "'), not found.";
+	if (!(jobTypeValue in {"ATS": 0, "JREQ": 0})) {
+		var msg = "JobSeekerEntity.applyForJob(): validator for JOB_TYPE('" + jobTypeValue + "'), not found.";
 		throw new Error(msg);
 	}
-	var jobApplication = applyForJob(jobType, this.seeker, job, resume, applicationDate, this.appliedJobs);	
-	return jobApplication;
+	return requestJobApplication(jobTypeValue, this.seeker, job, resume, applicationDate, this.appliedJobs);	
 };
-
 
 JobSeekerEntity.prototype.savedJob = function(job) {
 	var savedJobs = this.savedJobs;
