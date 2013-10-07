@@ -229,7 +229,9 @@ if (1) {
 
     var seeker = new JobSeekerEntity({firstName: "John", lastName: "Doe"});
 
-    var date = new DateModel(2013, 10, 21);
+    var date = new JobApplicationDate({
+        year: 2013, month: 10, day: 21
+    });
 
     var job = ibm.listJobs().first();
     var application = seeker.applyForJob(date, job);

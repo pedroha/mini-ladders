@@ -26,12 +26,9 @@ var Validator = {
 };
 
 var createJobApplication = function(seeker, job, resume, applicationDate) {
-	// TODO: investigate // BUG in Backbone? NOT WORKING?
-
 	if (!applicationDate) {
 		throw new Error("createJobApplication(): Missing applicationDate");
 	}
-
 	var jobApplication = JobApplicationManager.create({
 	    jobSeeker: 		 seeker
 	  , applicationDate: applicationDate
@@ -45,34 +42,31 @@ var JobApplicationHandlerByStatus = {
 	"success": function(seeker, job, resume, applicationDate, appliedJobs) {
 		var application = createJobApplication(seeker, job, resume, applicationDate);
 		appliedJobs.add(application);
+		return application;
 	}
   , "failed": function(seeker, job, resume, applicationDate, appliedJobs) {
 		// Log onto some place!
 		// Log into the JobApplication Error (should that be the same JobApplicationManager? )
 		var title = job.getTitle();
-		console.log("JREQ not PASSED for: " + title.get("value"));	
+		console.log("JREQ not PASSED for: " + title.get("value"));
 	}
 };
 
-var getJobApplicationHandler = function(reportType, seeker, job, resume, applicationDate, appliedJobs) {
-	var handler = function() {
-		var status = Validator[reportType].isJobApplicationValid(job, resume);
-		var handlerByStatus = JobApplicationHandlerByStatus[status];
-		handlerByStatus(seeker, job, resume, applicationDate, appliedJobs);
-	};
-	return handler;
+var applyForJob = function(reportType, seeker, job, resume, applicationDate, appliedJobs) {
+	var status = Validator[reportType].isJobApplicationValid(job, resume);
+	var handlerByStatus = JobApplicationHandlerByStatus[status];
+	return handlerByStatus(seeker, job, resume, applicationDate, appliedJobs);
 };
 
 JobSeekerEntity.prototype.applyForJob = function(applicationDate, job, resume) {
-//	var jobApplication = createJobApplication(job, resume);
 	var jobType = job.get("type").get("value");
 
 	if (!(jobType in {"ATS": 0, "JREQ": 0})) {
 		var msg = "JobSeekerEntity.applyForJob(): validator for JOB_TYPE('" + jobType + "'), not found.";
 		throw new Error(msg);
 	}
-	var handler = getJobApplicationHandler(jobType, this.seeker, job, resume, applicationDate, this.appliedJobs);;
-	handler(this.seeker, job, resume, this.appliedJobs);
+	var jobApplication = applyForJob(jobType, this.seeker, job, resume, applicationDate, this.appliedJobs);	
+	return jobApplication;
 };
 
 

@@ -46,13 +46,12 @@ JobList -> PostedJobs collection that contains a JobList?
 Experimenting with PostedJobs (instead of the generic JobList).
 
 May need to review all the collections!
-
+-> Not really (I don't think it helps me much wrapping all collections to Model-oriented collection wrappers)
 
 // We need the same Filtering algorithms for: Employer and for the Ladders!
 
 a) Focus on getting the Employer Filter first
 b) Then create the JobSystem (/the Ladders) and do more reporting
-
 
 1) Fix the DateModel <- JobApplicationDate for the JobApplication class
 2) Add filtering

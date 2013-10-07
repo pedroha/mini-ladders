@@ -16,6 +16,9 @@ var createDate = function(year, month, day) {
 };
 
 var DateModel = function(year, month, day) {
+  	if (!year || !month || !day) {
+  		throw new Error ("DateModel(): Missing year, month, day");
+  	}
 	this.date = createDate(year, month, day);
 };
 
@@ -28,6 +31,25 @@ DateModel.prototype.format = function(fmt) {
 	return date.format(fmt);
 };
 
+// DateModel is more reusable than JobApplicationDate but not a very semantic class
+
+var JobApplicationDate = Model.extend({
+	default: {
+		date: null
+	}
+  , initialize: function(fields) {
+		var fieldList = ["year", "month", "day"];
+		this.checkMissingFields("JobApplicationDate", fields, fieldList);
+
+		var year	= fields["year"];
+		var month	= fields["month"];
+		var day		= fields["day"];
+
+  		var date = new DateModel(year, month, day);
+  		this.set("date", date);
+	}
+});
+
 var SeekingAction = Model.extend({
 	default: {
 		date: null
@@ -38,13 +60,9 @@ var SeekingAction = Model.extend({
 		this.checkMissingFields("SeekingAction", fields, fieldList);
 
 		this.set("seeker", fields["jobSeeker"]);
-		this.set("date", fields["applicationDate"]);
+		this.set("applicationDate", fields["applicationDate"]);
 	}
 });
-
-var JobApplicationDate = Model.extend({
-});
-
 
 var JobApplication = Model.extend({
 	default: {
@@ -61,7 +79,7 @@ var JobApplication = Model.extend({
 	}
   , getApplicationDate: function() {
   		var seeking = this.get("seeking");
-  		var date = seeking.get("date");
+  		var date = seeking.get("applicationDate");
   		return date;
 	}
   , getJob: function() {

@@ -14,7 +14,8 @@ var ReportTabularAdapter = function(collection, rowAdapter) {
 
 var JobApplicationValueAdapter = {
     "applicationDate": function(item) {
-        var date = item.getApplicationDate();
+        var applicationDate = item.getApplicationDate();
+        var date = applicationDate.get("date");
         var display = date.format("YYYY-MM-DD");
         return display;
     }
