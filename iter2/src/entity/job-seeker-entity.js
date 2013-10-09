@@ -59,6 +59,9 @@ var requestJobApplication = function(reportType, seeker, job, resume, applicatio
 };
 
 JobSeekerEntity.prototype.applyForJob = function(applicationDate, job, resume) {
+	if (!applicationDate || !job) {
+		throw new Error("applyForJob() requires applicationDate and job");
+	}
 	var jobType = job.get("type");
 	var jobTypeValue = jobType.get("value");
 

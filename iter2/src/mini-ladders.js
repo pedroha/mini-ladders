@@ -189,7 +189,7 @@ if (0) {
     alert(content);
 }
 
-if (0) {
+if (1) {
     // JobSeeker: list applied jobs
 
     var ibm = new EmployerEntity({name: "IBM"});
@@ -199,11 +199,15 @@ if (0) {
 
     var seeker = new JobSeekerEntity({firstName: "John", lastName: "Doe"});
 
+    var date = new JobApplicationDate({
+        year: 2013, month: 10, day: 21
+    });
+
     var job = ibm.listJobs().first();
-    var application = seeker.applyForJob(job);
+    var application = seeker.applyForJob(date, job);
 
     var job = ibm.listJobs().at(1);
-    var application = seeker.applyForJob(job);
+    var application = seeker.applyForJob(date, job);
 
     var appliedJobs = seeker.listAppliedJobApplications();
 
@@ -225,7 +229,7 @@ if (1) {
     var ibm = new EmployerEntity({name: "IBM"});
 
     ibm.postJob({title: "Back-End Developer", type: JOB_TYPE.ATS});
-    ibm.postJob({title: "Front-End Developer", type: JOB_TYPE.JREQ});
+    ibm.postJob({title: "Front-End Developer", type: JOB_TYPE.ATS});
 
     var seeker = new JobSeekerEntity({firstName: "John", lastName: "Doe"});
 
@@ -241,17 +245,31 @@ if (1) {
 
     var appliedJobs = seeker.listAppliedJobApplications();
 
+    // Testing algo for filtering items in the collection
+
+    var jobFilter = new JobFilter({
+        date: new DateModel(2013, 10, 21)
+    });
+
+    var filter = {
+        // date: new DateModel(2013, 10, 21)
+        date: new Date(2013, 10, 21)
+    };
+
+    var sublist = appliedJobs.filter(function(item) {
+        var applicationDate = item.getApplicationDate();
+        var match = applicationDate.equals(filter.date);
+        return match;
+    });
+    var jobAppSubList = new JobApplicationList(sublist);
+
     // Let's play with filters!
 
-    console.log("Applied jobs");
-    appliedJobs.each(function(application) {
+    console.log("Sublist");
+    jobAppSubList.each(function(application) {
         var job = application.get("job");
         console.log("====>" + job.getTitle().get("value") );
     });
-
-    var content = Reporter.createReport(appliedJobs, ReportTabularAdapter, REPORT_TYPE["CSV"]);
-    alert(content);
-
 }
 
 // Employer: list applied jobs for specific job --> Job equals
@@ -261,3 +279,12 @@ if (1) {
 // Ladders: List of failed job applications for a given day.
 
 
+// Decisions: JobFilter will have a generic DateModel
+
+// How to compare a generic DateModel (year, month, day) vs a JobApplicationDate() object?
+
+// Must share the same interface for "comparison" -> translation to time()?
+
+// Date.getTime() // Time in milliseconds (acc. to current Timezone)
+
+// It could compare to Date().getTime()

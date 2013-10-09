@@ -1,10 +1,20 @@
 var TableReportBuilder = (function() {
 
+/*
     var buildCell = function(row, col, data, delimiter) {
         var cellContent = data.get(row, col);
-        var isLast = (col+1 == data.getNumCols());
+        var isLast = (col+1 == data.getNumCols());        
         var last = (isLast)? "" : delimiter.postBetweenCell();
         delimitedCell = delimiter.preCell() + cellContent + delimiter.postCell() + last;
+        return delimitedCell;
+    };
+*/
+    var buildCell = function(row, col, data, delimiter) {
+        var cellContent = data.get(row, col);
+        var isLast = data.isLastColumn(col);
+        var afterPostCell = delimiter.postBetweenCell(isLast);
+
+        delimitedCell = delimiter.preCell() + cellContent + delimiter.postCell() + afterPostCell;
         return delimitedCell;
     };
 

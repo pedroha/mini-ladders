@@ -10,6 +10,10 @@ var ReportTabularAdapter = function(collection, rowAdapter) {
         var item = rowAdapter.getColumn(row, j);
         return item;
     };
+    this.isLastColumn = function(col) {
+        var isLast = (col+1 == this.getNumCols());
+        return isLast;
+    };
 };
 
 var JobApplicationValueAdapter = {

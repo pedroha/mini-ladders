@@ -1,4 +1,3 @@
-
 var EmployerEntity = function(fields) {
 	var employer = EmployerManager.create(fields);
 	employer.entity = this;
@@ -28,17 +27,14 @@ EmployerEntity.prototype.listJobs = function() { // Should we return jobs or Pos
 	return jobs;
 };
 
+// If we use a specific JobApplicationDate, then the filter it's not as reusable for other queries!
 
 var JobFilter = function(fields) {
-	this.fields = fields;
-	/*
-	if ("date" in fields) {
-		this.date = fields["date"];
+	for (var prop in fields) {
+		if (fields.hasOwnProperty(prop)) {
+			this[prop] = fields[prop];
+		}
 	}
-	if ("job" in fields) {
-		this.job = fields["job"];
-	}
-	*/
 };
 
 /*

@@ -55,3 +55,41 @@ b) Then create the JobSystem (/the Ladders) and do more reporting
 
 1) Fix the DateModel <- JobApplicationDate for the JobApplication class
 2) Add filtering
+
+
+====
+
+
+
+// Aggregate objects
+/*
+var person = {
+	name: {
+		firstName: "Joseph"
+	  , lastName: "Doe"
+  	  , buildReport: function(reportBuilder) {
+  	  		var fields = {
+  	  			first: this.firstName
+  	  		  , last: this.lastName
+  	  		};
+  	  		reportBuilder.display(fields);
+  		}
+	}
+  , buildReport: function(reportBuilder) {
+  		reportBuilder.display("NOTHING HERE");
+
+  		// Descend through the "report" children
+  		this.name.buildReport(reportBuilder);
+	}
+};
+
+
+
+var formatter = new ReportFormatter("CSV");
+
+var reportBuilder = new ReportBuilder(formatter);
+//reportBuilder.display(formatter);
+
+person.buildReport(reportBuilder);
+
+*/

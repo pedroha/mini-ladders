@@ -11,7 +11,7 @@ var TableDelimiterStrategy = {
     'CSV': {
         preCell:    function() { return '\"'; }
       , postCell:   function() { return '\"'; }
-      , postBetweenCell:   function() { return ','; }
+      , postBetweenCell:   function(isLast) { return (isLast)? '':',' } // ELSE
       , preRow:     function() { return ''; }
       , postRow:    function() { return '\n'; }
       , preTable:   function() { return ''; }
@@ -19,7 +19,7 @@ var TableDelimiterStrategy = {
     }
   , 'HTML': {
         preCell:    function() { return '\t<td>'; }
-      , postBetweenCell:   function() { return ''; }
+      , postBetweenCell:   function(isLast) { return ''; }
       , postCell:   function() { return '</td>'; }
       , preRow:     function() { return '<tr>\n'; }
       , postRow:    function() { return '</tr>\n'; }

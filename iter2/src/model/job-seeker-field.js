@@ -37,7 +37,7 @@ var JobSeekerProfile = Model.extend({
 		  		var last = this.get("lastName").get("value");
 		  		var fullName = first + " " + last;
 		  		return fullName;
-		  }
+		    }
 		});
 
 			var FirstName = Model.extend({
