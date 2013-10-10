@@ -3,6 +3,7 @@
 var CompanyName = Model.extend({
 	defaults: {
 		name: null,
+		reportFieldProperty: 'name'
 	}
   , initialize: function(fields) {
  		this.checkMissingFields("CompanyName", fields, ["name"]);
@@ -26,6 +27,11 @@ var PostedJobs = Model.extend({
 	}
 });
 
+var shows = function(fieldName) {
+	var parts = fieldName.split('.');
+
+};
+
 
 var Employer = Model.extend({
 	defaults: {
@@ -35,9 +41,20 @@ var Employer = Model.extend({
   , initialize: function(fields) { // fields: need to pass the Fully built objects in Backbone!
  		this.checkMissingFields("Employer", fields, ["name", "postedJobs"]);
 	}
-  , reportOn: function(reportBuilder) {  		
-  		var jobs = this.listJobs();
-		jobs.reportOn(reportBuilder);
+  , reportOn: function(reportBuilder, field) {
+	  	// Report on Name OR report on PostedJobs ? (probably not both)
+
+  		if (reportBuilder.shows('Employer.name')) {
+  			var name = this.get('name');
+  			name.reportOn(reportBuilder);
+
+  			//reportBuilder.reportRecord(); // ReportBuilder: very fragile......
+  		}
+
+  		if (reportBuilder.shows('Employer.postedJobs')) {
+	  		var jobs = this.listJobs();
+			jobs.reportOn(reportBuilder);
+  		}
 	}
   , postJob: function(job) {
   		var jobs = this.listJobs();
@@ -49,15 +66,16 @@ var Employer = Model.extend({
 	}
 });
 
+// Question: Should we use a Collection wrapper: Employers() to contain EmployerList?
+// Not a Backbone pattern
+
+// var Employers = function(employers) {
+// 	this.employers = new EmployerList(employers);
+// };
+
 var EmployerList = Collection.extend({ // Utility collection
 	model: Employer
 });
-
-// ?
-
-var Employers = function() { // First class collection
-	var employees = new EmployerList();
-};
 
 var EmployerFactory = new function() {
 	var employers = [];

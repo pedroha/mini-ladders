@@ -1,73 +1,8 @@
-
-var LogFormatter = function(columnHeader) {
-
-	var addProperty = function(key, value, target) {
-		if (key in columnHeader) {
-			key = columnHeader[key];
-		}
-		target[key] = value;
-	};
-
-	var remapKeysToColumnHeader = function(source, target) {
-		for (var key in source) {
-			if (source.hasOwnProperty(key)) {
-				addProperty(key, source[key], target);
-			}
-		}
-	};
-
-	this.display = function() {
-		var args = Array.prototype.slice.call(arguments, 0);
-
-		var source = args[0][0];
-		var target = {};
-
-		remapKeysToColumnHeader(source, target);
-
-		var display = JSON.stringify(target);
-		console.log("===> " + display);
-	};
-};
-
-var ReportBuilder = function(formatter) {
-	formatter = formatter || new LogFormatter();
-
-	this.display = function(data) {
-		var args = [].slice.call(arguments, 0);
-		formatter.display(args);
-	};
-};
-
-var ReportFormatter = function(outputFormat, columnFieldMapping) {
-	this.outputFormat = outputFormat;
-
-	this.display = function(data) {
-		var data = JSON.stringify(data);
-		console.log(data);
-	};
-};
-
-/*
-
-NEED: JobApplicationList to Filter through and display different fields
-
-var CSVFormatter = (function() {
-	var display = function() {
-
-	};
-
-	return {
-		display: display
-	}
-})();
-*/
-
 var columnHeader = {
 	"title": "Job Title"
 };
 
 var formatter = new LogFormatter(columnHeader);
-
 var reportBuilder = new ReportBuilder(formatter);
 
 var createJob = JobFactory.create;
@@ -118,38 +53,16 @@ if (1) {
 }
 
 
-/// NEXT: Formatters: 
-
-
-
-/*
-
-// NEXT: PostedJobs that contains a JobList
-// One thing at a ti
-
-// Test Employer.reportOn() NOT as useful as: JobApplications.reportOn(reportBuilder);
-// Filter: JobApplications.filter()
-//			JobsAppications.
-
-JobApplications.create = function() {
-};
-
-JobApplications.list = function() { // list all JobApplications that have been created!
-};
-
-
-var JobApplication = Model.extend({ // Report on: JobApplicationDate, Employer Name, Job Seeker Name, 
-	defaults: {
-
-	}
-  , initialize: function() {
-
-	}
-});
-
-
 if (1) {
-	// -> JobList? not as useful
+	var fields = {
+		'applicationDate': 	new JobApplicationDate({year: 2013, month: 10, day: 2})
+	  , 'employer': 		new StringWrapper2({value2: "IBM Corp."})
+	  , 'seeker': 			new StringWrapper3({value3: "John Doe"})
+	  , 'title': 			new StringWrapper4({value4: "VP of Development"})
+	};
+
+	var application = new JobApplication(fields);
+
+	application.reportOn(reportBuilder);	
 }
 
-*/

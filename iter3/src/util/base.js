@@ -5,6 +5,7 @@ var Collection = Backbone.Collection.extend({
 		var items = this;
 		items.each(function(item) {
 			item.reportOn(reportBuilder);
+			reportBuilder.reportRecord();
 		});
 	}
 });
@@ -61,8 +62,8 @@ var Model = Backbone.Model.extend({
 			reportBuilder.display(obj);
 		}
 	}
-  , reportOnList: function(reportBuilder, items) {
-		items.each(function(item) {
+  , reportOnArray: function(reportBuilder, items) {
+		items.forEach(function(item) {
 			item.reportOn(reportBuilder);
 		});
 	}
