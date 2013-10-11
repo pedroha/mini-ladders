@@ -93,3 +93,8 @@ var reportBuilder = new ReportBuilder(formatter);
 person.buildReport(reportBuilder);
 
 */
+
+
+====
+
+Iter4: want to get rid of ReportBuilder.reportRecord() to trigger the collection
