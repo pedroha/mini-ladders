@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Lucid</title>
+</head>
+<body>
+	<script src="../vendor/lucid.js"></script>
+	
+	<script>
+
+	Object.prototype.toString = function() { // Not great for DOM elements (pretty bad) but great for JSON objects.
+		var json = JSON.stringify(this);
+		return json;
+	};
+
+	if (1) {
+		var emitter = LucidJS.emitter();
+
+		emitter.on('foo.bar', function(data) {
+		    console.log('foo.bar: ' + data);
+		});
+		emitter.on('foo', function(data) {
+		    console.log('foo: ' + data);
+		});
+		emitter.trigger('foo.bar.baz', {a: "Hello"} );
+	}
+
+	if (0) {
+
+		var centralEmitter = LucidJS.emitter();
+		var emitterA = LucidJS.emitter();
+		var emitterB = LucidJS.emitter();
+		var emitterC = LucidJS.emitter();
+
+		//pipe the foo event from emitter A
+		centralEmitter.pipe('foo', emitterA);
+
+		//pipe the bar and baz event from emitter B
+		centralEmitter.pipe(['bar', 'baz'], emitterB);
+
+		//pipe all events from emitter C
+		centralEmitter.pipe(emitterC);
+
+		centralEmitter.on('foo', function(data) {
+		//	var json = JSON.stringify(data);
+		//	console.log(json);
+		});
+
+		emitterA.on('', function(data) {
+		//	console.log('captured event ' + event);
+			var json = JSON.stringify(data);
+			console.log("EmitterA:" + json);
+		});
+
+
+		centralEmitter.on('emitter.event', function(event) {
+		//	console.log('captured event ' + event);
+		});
+
+		centralEmitter.on('foo', function(data) {
+			var json = JSON.stringify(data);
+			console.log("CENTRAL: " + json);
+		});
+
+		emitterA.trigger('foo', {stuff: 'lots of stuff', danger: true});
+	}
+
+	</script>
+</body>
+</html>

@@ -321,7 +321,9 @@ if (1) {
 	  , function buildFullName(fields) {
 			var first = fields["name.firstName"] || "---";
 			var last = fields["name.lastName"] || 'XXX';
-			var fullName = first + " " + last;
+			//var fullName = first + " " + last;
+
+			var fullName = "F:" + first + " " + "L:" + last;
 			return fullName;
 		}
 	);
@@ -343,23 +345,24 @@ if (1) {
 	var ReportColumns = function(columns) {
 		this.columns = columns;
 
-		this.isLastField = function(field) {
-			var lastFields = this.columns[this.columns.length-1].fields;
+		var getLastField = function() {
+			var lastFields = columns[columns.length-1].fields;
 			var lastField = lastFields[lastFields.length-1];
-			var isLastField = (field[lastField]);			
-			return isLastField;
+			return lastField;
+		};
+
+		var lastReportField = getLastField();
+
+		console.log("Last Reporting Field: " + lastReportField);
+
+		this.isLastField = function(field) {
+			var containsLastField = !!(field[lastReportField]);			
+			return containsLastField;
 		};
 	};
 
 	var RecordBuilder = function(reportColumns, tracer) {
 		var record = new RecordCollector();
-
-		var createField = function(value) {
-			var fieldKey = tracer.getTrace();
-			var field = {};
-			field[fieldKey] = value;
-			return field;
-		};
 
 		var createFullRecord = function(record) {
 			var row = {};
@@ -369,6 +372,7 @@ if (1) {
 			for (var i = 0; i < columns.length; i++) {
 				var column = reportColumns.columns[i];
 				var reportField = column.fieldMaker(record);
+
 				row[column.header] = reportField;
 			}
 			var json = JSON.stringify(row);
@@ -384,6 +388,13 @@ if (1) {
 			}			
 		};
 
+		var createField = function(value) {
+			var fieldKey = tracer.getTrace();
+			var field = {};
+			field[fieldKey] = value;
+			return field;
+		};
+
 		var add = function(value) {			
 			var field = createField(value);
 			record.add(field);
@@ -393,14 +404,27 @@ if (1) {
 		this.add = add;
 	};
 
+	var reportEmitter = LucidJS.emitter();
+
+	reportEmitter.on('report', function(data) {
+		var json = JSON.stringify(data);
+		console.log("Report:" + json);		
+	});
 
 	var BasicReportBuilder = function(reportColumns) {
+
 		var tracer = new Tracer();
 		var recordBuilder = new RecordBuilder(reportColumns, tracer);
 
 		// public ------------------------------------
 		this.display = function(value) {
 			recordBuilder.add(value);
+
+			var field = tracer.getTrace();
+			var data = {};
+			data[field] = value;
+
+			reportEmitter.trigger('report', data);
 		};
 
 		this.trace = function(element) {
@@ -420,7 +444,6 @@ if (1) {
 	});
 
 	var columns = new ReportColumns([jobSeekerColumn]);
-
 	var reporter = new BasicReportBuilder(columns);
 
 	var first = new FirstName({value: "John"});
@@ -429,9 +452,9 @@ if (1) {
 	var myName = new PersonName({firstName: first, lastName: last});
 	var seeker = new JobSeeker({name: myName});
 
-	// myName.reportOn(reporter);
-	// seeker.reportOn(reporter);
-
+	//myName.reportOn(reporter);
+//	seeker.reportOn(reporter);	// +++++++++++++++++++++++++++++
+	
 	var LoggerReportBuilder = function(reportColumns) {
 		var tracer = new Tracer();
 
@@ -448,6 +471,7 @@ if (1) {
 			tracer.endTrace(element);
 		};
 	};
+
 
 	var JobApplication = Aggregate.extend({
 		defaults: {
@@ -472,7 +496,7 @@ if (1) {
 
 	var jobApplicationDateColumn = new ReportColumn(
 		"Application Date"
-	  , ["applicationDate"] // ["seeker.name.firstName", "seeker.name.lastName"]
+	  , ["applicationDate"]
 	  , function buildDate(fields) {
 	  		var value = fields["applicationDate"];
 			return value;
@@ -486,14 +510,62 @@ if (1) {
 	  // , title: null
 	});
 
-//	TODO: NOT WORKING !!!
-//	var columns = new ReportColumns([jobApplicationDateColumn, jobSeekerColumn]);
-//  Single column IS working...
 
-	var columns = new ReportColumns([jobApplicationDateColumn]);
-	//var columns = new ReportColumns([jobSeekerColumn]);
+	// TESTING!
+	/*
+	var columns = new ReportColumns([jobSeekerColumn]);
+	var reporter = new BasicReportBuilder(columns);
+
+	var first = new FirstName({value: "John"});
+	var last = new LastName({value: "McCain"});
+
+	var myName = new PersonName({firstName: first, lastName: last});
+	var seeker = new JobSeeker({name: myName});
+
+	seeker.reportOn(reporter);	// +++++++++++++++++++++++++++++
+
+	var last = {};
+	last['name.lastName'] = "Last";
+
+	console.log("isLast: " + columns.isLastField(last));
+	*/
+
+	var jobSeekerColumn = new ReportColumn(
+		"JobSeeker"
+	  , ["seeker.name.firstName", "seeker.name.lastName"] // ["seeker.name.firstName", "seeker.name.lastName"]
+	  , function buildFullName(fields) {
+			var first = fields["seeker.name.firstName"] || "---";
+			var last = fields["seeker.name.lastName"] || 'XXX';
+
+			var fullName = "F:" + first + " " + "L:" + last;
+			//var fullName = first + " " + last;
+			return fullName;
+		}
+	);
+
+	//var columns = new ReportColumns([jobSeekerColumn]); // 
+
+	// Name is LOST
+	var columns = new ReportColumns([jobApplicationDateColumn, jobSeekerColumn]);
+
+	// This one works!!!
+
+	// var columns = new ReportColumns([jobApplicationDateColumn, jobSeekerColumn]);
 	var reporter = new BasicReportBuilder(columns);
 
 	application.reportOn(reporter);
+
+
+//	var columns = new ReportColumns([jobApplicationDateColumn, jobSeekerColumn]);
+//  Single column IS working...
+
+	//var columns = new ReportColumns([jobApplicationDateColumn]);
+
+/*
+	var columns = new ReportColumns([jobSeekerColumn]);
+	var reporter = new BasicReportBuilder(columns);
+	application.reportOn(reporter);
+*/
+
 }
 

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Reporter</title>
+</head>
+<body>
+
+	<script src="../vendor/lucid.js"></script>
+	<script src="../vendor/underscore.js"></script>
+
+	<script src="pipe-aggregator.js"></script>
+
+	<script>
+
+		var stream = {
+			source: createEmitter()
+		  , target: createEmitter()
+		};
+
+		var jsonLogger = function(data) {
+			var json = JSON.stringify(data);
+			console.log("++++ " + json);
+		};
+		stream.target.on("name", jsonLogger);
+
+
+		var mapping = {};
+		mapping['name.firstName'] = "first";
+		mapping['name.lastName'] = "last";
+
+		var field = {
+			sources: ["name.firstName", "name.lastName"]
+		  , target:  "name"
+		};
+		var targetFields = ["first", "last"];
+
+		var namePipe =	new PipeAggregator("name", mapping, stream);
+
+		//stream.source.on("name", jsonLogger);
+
+		stream.source.trigger("name.firstName", {first: "John"} );
+		stream.source.trigger("name.lastName", {last: "Doe"} );
+
+/*
+
+		var test = function() {
+
+			var primitiveValueData = {
+				'seeker.name.firstName': 'John'
+			  , 'seeker.name.lastName': 'Doe'
+			  , 'applicationDate' : '2013-10-21'
+			};
+
+			var primitiveValueDataMap = {
+				'seeker.name.firstName': 'jobseeker-firstname'
+			  , 'seeker.name.lastName': 'jobsekker-lastname'
+			  , 'applicationDate' : 'application-date'
+			};
+
+			var translationEmitter = createEmitter();
+
+			var reporter = new Reporter(primitiveValueDataMap);
+
+			for (var p in primitiveValueData) {
+				var value = primitiveValueData[p];
+				reporter.display(p, value);
+			}
+
+		};
+
+		test();
+
+*/
+
+	</script>
+
+
+</body>
+</html>

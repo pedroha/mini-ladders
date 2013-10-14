@@ -8,8 +8,6 @@
  * Licenced under the BSD License.
  * See https://raw.github.com/RobertWHurst/LucidJS/master/license.txt
  */
-
-
 (function(factory) {
 
 	//AMD
@@ -197,15 +195,12 @@
 		 * @param event
 		 * @return {Boolean}
 		 */
-
 		function trigger(event, a1, a2, a3, a4, a5, a6, a7, a8, a9, la) {
-
 			var longArgs, lI, eventListeners, result = true;
 
 			if(typeof la !== 'undefined') {
 				longArgs = Array.prototype.slice.apply(arguments, [1]);
 			}
-
 
 			if(typeof event === 'object' && typeof event.push === 'function') {
 				if(longArgs) {
@@ -216,7 +211,7 @@
 			}
 
 			event = event.split('.');
-			while(event.length) {				
+			while(event.length) {
 				if(longArgs){
 					if(triggerOnly.apply(this, [event.join('.')].concat(longArgs)) === false){
 						result = false;
